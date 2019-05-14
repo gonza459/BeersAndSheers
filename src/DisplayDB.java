@@ -1,5 +1,5 @@
 
-import dnl.utils.text.table.TextTable;
+//import dnl.utils.text.table.TextTable;
 
 import java.io.*;
 import java.sql.*;
@@ -113,9 +113,6 @@ public class DisplayDB {
             Integer C_zip = rs.getInt("Zipcode");
             String email = rs.getString("Email");
             String phone = rs.getString("PhoneNum");
-            String creditNum = rs.getString("CreditNum");
-            String cardExp = rs.getString("CardExpiration");
-            String cardCode = rs.getString("CardCode");
 
 
             System.out.print(
@@ -126,10 +123,7 @@ public class DisplayDB {
                             " City:  " + C_city + "\t\t" +
                             " Zipcode: " + C_zip + "\t\t" +
                             " Email: " + email + "\t\t" +
-                            " Phone Number:" + phone + "\t\t" +
-                            " Credit Card Number" + creditNum + "\t\t" +
-                            " Credit Card Expiration Date: " + cardExp + "\t\t" +
-                            " Credit Card Security Code: " + cardCode + "\n"
+                            " Phone Number:" + phone + "\n"
             );
 
         }
