@@ -1,11 +1,12 @@
-
-//import dnl.utils.text.table.TextTable;
-
+import dnl.utils.text.table.TextTable;
 import java.io.*;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.text.*;
 
 public class DisplayDB {
     List<List<String>> attributes = new ArrayList<List<String>>();
@@ -33,66 +34,119 @@ public class DisplayDB {
             case 1: {
                 String displaySql = "SELECT * FROM Clients";
 
+                String countSql = "SELECT count(*) From Clients";
+
                 try (PreparedStatement query = conn.prepareStatement(displaySql)) {
                     ResultSet rs = query.executeQuery();
-                    displayClients(conn, rs);
+
+
+                    PreparedStatement countPS = conn.prepareStatement(countSql);
+                    ResultSet countRS = countPS.executeQuery();
+                    countRS.next();
+                    int count = countRS.getInt(1);
+
+                    displayClients(conn, rs, count);
                     rs.close();
 
                     break;
                 }
+
 
             }case 2: {
                 String displaySql = "SELECT * FROM Employees";
 
+                String countSql = "SELECT count(*) From Employees";
+
+
                 try (PreparedStatement query = conn.prepareStatement(displaySql)) {
                     ResultSet rs = query.executeQuery();
-                    displayEmployees(conn, rs);
+
+
+                    PreparedStatement countPS = conn.prepareStatement(countSql);
+                    ResultSet countRS = countPS.executeQuery();
+                    countRS.next();
+                    int count = countRS.getInt(1);
+
+                    displayEmployees(conn, rs, count);
                     rs.close();
 
                     break;
                 }
+
+
 
             }case 3: {
                 String displaySql = "SELECT * FROM Appointments";
 
+                String countSql = "SELECT count(*) From Appointments";
+
                 try (PreparedStatement query = conn.prepareStatement(displaySql)) {
                     ResultSet rs = query.executeQuery();
-                    displayAppointments(conn, rs);
+
+
+                    PreparedStatement countPS = conn.prepareStatement(countSql);
+                    ResultSet countRS = countPS.executeQuery();
+                    countRS.next();
+                    int count = countRS.getInt(1);
+
+                    displayAppointments(conn, rs, count);
                     rs.close();
 
                     break;
                 }
+
 
             }case 4: {
                 String displaySql = "SELECT * FROM Addresses";
 
+                String countSql = "SELECT count(*) From Addresses";
+
                 try (PreparedStatement query = conn.prepareStatement(displaySql)) {
                     ResultSet rs = query.executeQuery();
-                    displayAddresses(conn, rs);
+
+
+                    PreparedStatement countPS = conn.prepareStatement(countSql);
+                    ResultSet countRS = countPS.executeQuery();
+                    countRS.next();
+                    int count = countRS.getInt(1);
+
+                    displayAddresses(conn, rs, count);
                     rs.close();
 
                     break;
                 }
+
 
             }case 5: {
                 String displaySql = "SELECT * FROM Services";
 
+                String countSql = "SELECT count(*) From Services";
+
                 try (PreparedStatement query = conn.prepareStatement(displaySql)) {
                     ResultSet rs = query.executeQuery();
-                    displayServices(conn, rs);
+
+
+                    PreparedStatement countPS = conn.prepareStatement(countSql);
+                    ResultSet countRS = countPS.executeQuery();
+                    countRS.next();
+                    int count = countRS.getInt(1);
+
+                    displayServices(conn, rs, count);
                     rs.close();
 
                     break;
                 }
 
+
             }
+
         }
 
     }
 
 
     //Querries to print data from each respective table
-    private static void displayClients(Connection conn, ResultSet rs) throws SQLException {
+    private static void displayClients(Connection conn, ResultSet rs,  int count) throws SQLException {
     /*    String createProcedure = "Create Procedure displayClients()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Clients;\n" +
@@ -104,32 +158,30 @@ public class DisplayDB {
         CallableStatement cs = conn.prepareCall("{call displayClients}");
         rs = cs.executeQuery();
         System.out.println("\n");
-        while (rs.next()) {
-            Integer C_ID = rs.getInt("CustomerID");
-            String C_fName = rs.getString("FirstName");
-            String C_lName = rs.getString("LastName");
-            String C_streetAdd = rs.getString("Street");
-            String C_city = rs.getString("City");
-            Integer C_zip = rs.getInt("Zipcode");
-            String email = rs.getString("Email");
-            String phone = rs.getString("PhoneNum");
 
-
-            System.out.print(
-                    "ClientID: " + C_ID + "\t\t" +
-                            " First Name: " + C_fName + "\t\t" +
-                            " Last Name: " + C_lName + "\t\t" +
-                            " Street Address: " + C_streetAdd + "\t\t" +
-                            " City:  " + C_city + "\t\t" +
-                            " Zipcode: " + C_zip + "\t\t" +
-                            " Email: " + email + "\t\t" +
-                            " Phone Number:" + phone + "\n"
-            );
-
+        String[] data = {"Customer ID", "First Name", "Last Name", "Street Address", "City", "Zipcode", "Phone Number", "Email"};
+        String[][] Clients = new String[count][8];
+        int i = 0;
+        assert rs != null;
+        while (rs.next())
+        {
+            Clients[i][0] = rs.getString("FirstName");;
+            Clients[i][1] = rs.getString("FirstName");
+            Clients[i][2] = rs.getString("LastName");
+            Clients[i][3] = rs.getString("Street");
+            Clients[i][4] = rs.getString("City");
+            Clients[i][5] = Integer.toString(rs.getInt("Zipcode"));
+            Clients[i][6] = rs.getString("PhoneNum");
+            Clients[i][7] = rs.getString("Email");
+            i++;
         }
+        TextTable ClientsTable = new TextTable(data, Clients);
+        ClientsTable.printTable();
 
+        rs.close();
+        //query.executeUpdate();
     }
-    private static void displayEmployees(Connection conn, ResultSet rs) throws SQLException{
+    private static void displayEmployees(Connection conn, ResultSet rs, int count) throws SQLException{
       /*  String createProcedure = "Create Procedure displayEmployees()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Employees;\n" +
@@ -141,34 +193,30 @@ public class DisplayDB {
         CallableStatement cs = conn.prepareCall("{call displayEmployees}");
         rs = cs.executeQuery();
         System.out.println("\n");
-        while (rs.next()) {
-            Integer E_ID = rs.getInt("EmployeeID");
-            String E_fName = rs.getString("FirstName");
-            String E_lName = rs.getString("LastName");
-            String E_streetAdd = rs.getString("Street");
-            String E_city = rs.getString("City");
-            Integer E_zip = rs.getInt("Zipcode");
-            String phone = rs.getString("PhoneNum");
 
-
-
-            System.out.print(
-                    "EmployeeID: " + E_ID + "\t\t" +
-                            " First Name: " + E_fName + "\t\t" +
-                            " Last Name: " + E_lName + "\t\t" +
-                            " Street Address: " + E_streetAdd + "\t\t" +
-                            " City:  " + E_city + "\t\t" +
-                            " Zipcode: " + E_zip + "\t\t" +
-                            " Phone Number:" + phone + "\n"
-
-            );
-
+        String[] data = {"Employee ID", "First Name", "Last Name", "Street Address", "City", "Zipcode", "Phone Number"};
+        String[][] Employees = new String[count][7];
+        int i = 0;
+        assert rs != null;
+        while (rs.next())
+        {
+            Employees[i][0] = rs.getString("FirstName");;
+            Employees[i][1] = rs.getString("FirstName");
+            Employees[i][2] = rs.getString("LastName");
+            Employees[i][3] = rs.getString("Street");
+            Employees[i][4] = rs.getString("City");
+            Employees[i][5] = Integer.toString(rs.getInt("Zipcode"));
+            Employees[i][6] = rs.getString("PhoneNum");
+            i++;
         }
+        TextTable EmployeesTable = new TextTable(data, Employees);
+        EmployeesTable.printTable();
+
         rs.close();
         //query.executeUpdate();
     }
 
-    private static void displayAppointments(Connection conn, ResultSet rs) throws SQLException{
+    private static void displayAppointments(Connection conn, ResultSet rs,  int count) throws SQLException{
     /*    String createProcedure = "Create Procedure displayAppointments()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Appointments;\n" +
@@ -180,29 +228,29 @@ public class DisplayDB {
         CallableStatement cs = conn.prepareCall("{call displayAppointments}");
         rs = cs.executeQuery();
         System.out.println("\n");
-        while (rs.next()) {
-            Integer A_ID = rs.getInt("AppointmentID");
-            String AppointmentMonth = rs.getString("AppointmentMonth");
-            String AppointmentDay = rs.getString("AppointmentDay");
-            String ServiceID = rs.getString("ServiceID");
-            Integer C_ID = rs.getInt("CustomerID");
 
-            System.out.print(
-                    " Appointment ID " + A_ID + "\t\t" +
-                            " Client's Next Appointment Date: " + AppointmentMonth + "/" + AppointmentDay + "\t\t" +
-                            " Service: " + ServiceID + "\t\t" +
-                            " CustomerID:  " + C_ID + "\n"
-
-            );
-
+        String[] data = {"Appointment ID", "Service ID", "Appointment Month", "Appointment Day", "Customer ID"};
+        String[][] Appointments = new String[count][5];
+        int i = 0;
+        assert rs != null;
+        while (rs.next())
+        {
+            Appointments[i][0] = Integer.toString(rs.getInt("AppointmentID"));
+            Appointments[i][1] = Integer.toString(rs.getInt("ServiceID"));
+            Appointments[i][2] = Integer.toString(rs.getInt("AppointmentMonth"));
+            Appointments[i][3] = Integer.toString(rs.getInt("AppointmentDay"));
+            Appointments[i][4] = Integer.toString(rs.getInt("CustomerID"));
+            i++;
         }
+        TextTable AppointmentTable = new TextTable(data, Appointments);
+        AppointmentTable.printTable();
+
         rs.close();
         //query.executeUpdate();
     }
 
 
-
-    private static void displayAddresses(Connection conn, ResultSet rs) throws SQLException{
+    private static void displayAddresses(Connection conn, ResultSet rs,  int count) throws SQLException{
     /*   String createProcedure = "Create Procedure displayAddresses()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Addresses;\n" +
@@ -214,23 +262,26 @@ public class DisplayDB {
         CallableStatement cs = conn.prepareCall("{call displayAddresses}");
         rs = cs.executeQuery();
         System.out.println("\n");
-        while (rs.next()) {
-            String E_streetAdd = rs.getString("Street");
-            String E_city = rs.getString("City");
-            Integer E_zip = rs.getInt("Zipcode");
 
-
-            System.out.print(
-                    " Street Address: " + E_streetAdd + "\t\t" +
-                            " City:  " + E_city + "\t\t" +
-                            " Zipcode: " + E_zip + "\n"
-            );
-
+        String[] data = {"Street Address", "City", "Zipcode"};
+        String[][] Addresses = new String[count][3];
+        int i = 0;
+        assert rs != null;
+        while (rs.next())
+        {
+            Addresses[i][0] = rs.getString("Street");
+            Addresses[i][1] = rs.getString("City");
+            Addresses[i][2] = Integer.toString(rs.getInt("Zipcode"));
+            i++;
         }
+        TextTable AddressTable = new TextTable(data, Addresses);
+        AddressTable.printTable();
+
         rs.close();
         //query.executeUpdate();
     }
-    private static void displayServices(Connection conn, ResultSet rs) throws SQLException{
+
+    private static void displayServices(Connection conn, ResultSet rs,  int count) throws SQLException{
        /* String createProcedure = "Create Procedure displayServices()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Services;\n" +
@@ -242,23 +293,23 @@ public class DisplayDB {
         CallableStatement cs = conn.prepareCall("{call displayServices}");
         rs = cs.executeQuery();
         System.out.println("\n");
-        while (rs.next()) {
-            Integer ServiceID = rs.getInt("ServiceID");
-            String ServiceName = rs.getString("ServiceName");
-            String ServiceDuration = rs.getString("ServiceDuration");
-            Float ServicePrice = rs.getFloat("ServicePrice");
-            String ServiceMaterials = rs.getString("ServiceMaterials");
 
-
-            System.out.print(
-                    " Service ID: " + ServiceID + "\t\t" +
-                            " Service: " + ServiceName + "\t\t" +
-                            " Service Duration: " + ServiceDuration + "\t\t" +
-                            " Price of Service:  " + ServicePrice + "\t\t" +
-                            " Materials: " + ServiceMaterials + "\n"
-            );
-
+        String[] data = {"Service ID", "Service Name", "Duration", "Price", "Materials"};
+        String[][] Services = new String[count][5];
+        int i = 0;
+        assert rs != null;
+        while (rs.next())
+        {
+            Services[i][0] = Integer.toString(rs.getInt("ServiceID"));
+            Services[i][1] = rs.getString("ServiceName");
+            Services[i][2] = rs.getString("ServiceDuration");
+            Services[i][3] = Float.toString(rs.getFloat("ServicePrice"));
+            Services[i][4] = rs.getString("ServiceMaterials");
+            i++;
         }
+        TextTable ServiceTable = new TextTable(data, Services);
+        ServiceTable.printTable();
+
         rs.close();
         //query.executeUpdate();
     }
@@ -267,7 +318,16 @@ public class DisplayDB {
         String data = ("Customer ID, " + " First Name, " + "Last Name, " + "Street Address, " + "City, "
                 + "Zipcode," + "Phone Number," + "Email\n");
 
-        FileWriter fileWriter = new FileWriter("clients.csv", false);
+        String Date_Time = "dd-MM-yyy_HH:mm:ss";
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(Date_Time);
+        LocalDateTime currentDate = LocalDateTime.now();
+        String formatDateTime = currentDate.format(dtf);
+
+
+
+
+        FileWriter fileWriter = new FileWriter("clients_" + formatDateTime + ".csv", false);
         PrintWriter writer = new PrintWriter(fileWriter);
 
         writer.print(data);
@@ -291,7 +351,7 @@ public class DisplayDB {
         data = ("Employee ID, " + " First Name, " + "Last Name, " + "Street Address, " + "City, "
                 + "Zipcode," + "Phone Number\n");
 
-        fileWriter = new FileWriter("Employees.csv", false);
+        fileWriter = new FileWriter("Employees_" + formatDateTime + ".csv", false);
         writer = new PrintWriter(fileWriter);
 
         writer.print(data);
@@ -313,7 +373,7 @@ public class DisplayDB {
 
         data = ("Appointment ID, " + "ServiceID, " + "AppointmentMonth, " + "AppointmentDay, " + "CustomerID,\n");
 
-        fileWriter = new FileWriter("Appointments.csv", false);
+        fileWriter = new FileWriter("Appointments_" + formatDateTime + ".csv", false);
         writer = new PrintWriter(fileWriter);
 
         writer.print(data);
@@ -333,7 +393,7 @@ public class DisplayDB {
 
         data = ("Service ID, " + "ServiceName, " + "ServiceDuration, " + "ServicePrice, " + "ServiceMaterials,\n");
 
-        fileWriter = new FileWriter("Services.csv", false);
+        fileWriter = new FileWriter("Services_" + formatDateTime + ".csv", false);
         writer = new PrintWriter(fileWriter);
 
         writer.print(data);
