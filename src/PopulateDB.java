@@ -41,8 +41,8 @@ public class PopulateDB {
                 "VALUES (?, ?, ?)";
         String appointmentInsert = "Insert into Appointments(AppointmentID, ServiceID, AppointmentMonth, AppointmentDay, CustomerID)" +
                 "VALUES (?, ?, ?, ?, ?)";
-        String ClientsInsert = "Insert into Clients(CustomerID,FirstName, LastName, Street, City, Zipcode, PhoneNum, email, CreditNum, CardExpiration, CardCode)" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String ClientsInsert = "Insert into Clients(CustomerID,FirstName, LastName, Street, City, Zipcode, PhoneNum, email)" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         String EmployeeInsert = "Insert into Employees(EmployeeID, FirstName, LastName, Street, City, Zipcode, PhoneNum)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -124,13 +124,13 @@ public class PopulateDB {
     }
 
     public void InsertClient(Connection conn)throws SQLException{
-        String createProcedure = "CREATE PROCEDURE insertClient(IN FirstName varchar(20), IN LastName varchar(20), " +
+        /*String createProcedure = "CREATE PROCEDURE insertClient(IN FirstName varchar(20), IN LastName varchar(20), " +
                 "IN Street varchar(50), IN  City varchar(45), IN Zipcode int(11), IN PhoneNum varchar(25), IN Email varchar(25)) if NOT Exists "+
                 "BEGIN\n"+
                 "INSERT Into Clients (FirstName, LastName, Street, City, Zipcode, PhoneNum, Email)\n" +
                 "Values (FirstName, LastName, Street, City, Zipcode, PhoneNum, Email);\n" +
                 "END;\n";
-
+*/
         //Statement stmt = conn.createStatement();
         //stmt.executeUpdate(createProcedure);
 

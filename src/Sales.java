@@ -25,26 +25,26 @@ public class Sales {
         }
     }
 
-    /*
-    static void InsertData(Connection conn) throws SQLException{
-        String ServicesInsert = "Insert into MonthlySales(Month, TotalAppointments, TotalRevenue, TotalClients)" +
-                "VALUES (?, ?, ?, ?)";
-        String ServicesAppt = "Select count(CustomerID) From Appointments Group by Appointment";
 
-        try (PreparedStatement query = conn.prepareStatement(ServicesInsert)){
-            query.setInt(1,);
-            query.setString(2, service.getName());
-            query.setString(3, service.getDuration());
-            query.setInt(4, service.getPrice());
-            query.setString(5, service.getMaterials());
-            query.executeUpdate();
-            query.clearParameters();
-            System.out.println("Inserted!");
+    static void InsertSales(Connection conn) throws SQLException {
+     /*   String insertSales = "Insert into MonthlySales(TotalAppointments) Values(?)";
+
+        CallableStatement cs = conn.prepareCall("{call TotalAppointments}");
+        ResultSet rs = cs.executeQuery();
+        System.out.println("\n");
+
+        while(rs.next()){
+            Integer total = rs.getInt("totals");
+            try (PreparedStatement query = conn.prepareStatement(insertSales)){
+                query.setInt(1,total);
+                query.executeUpdate();
+                query.clearParameters();
+                System.out.println("Inserted!");
+            }
         }
 
-
-
     }
-*/
+    */
+    }
 
 }

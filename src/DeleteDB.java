@@ -121,7 +121,6 @@ public class DeleteDB {
                     query.executeUpdate("Truncate table Employees");
                     query.executeUpdate("Truncate table Addresses");
                     query.executeUpdate("Truncate table Appointments");
-                    query.executeUpdate("Truncate table CreditCardInformation");
 
                     System.out.println("All records have successfully been deleted.");
 

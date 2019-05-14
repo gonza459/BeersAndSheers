@@ -15,12 +15,13 @@ public class DisplayDB {
     //Prints out Information from the Database Tables
     public void DisplayDatabase(Connection conn) throws Exception{
         Scanner dataTable = new Scanner(System.in);
-        System.out.println("Enter the number of the data table you like to display: " + "\n" +
+        System.out.println("Enter the number of the information you would like to display: " + "\n" +
                 "1.Clients" + "\n" +
                 "2.Employees" + "\n" +
                 "3.Appointments" + "\n" +
-                "4.Addresses" + "\n" +
-                "5.Services" + "\n" );
+                "4.Addresses List" + "\n" +
+                "5.Services Being Offered" + "\n" +
+                "6.Sales per Month" + "\n");
 
         int response = dataTable.nextInt();
 
@@ -70,17 +71,17 @@ public class DisplayDB {
                 }
 
             }case 5: {
-            String displaySql = "SELECT * FROM Services";
+                String displaySql = "SELECT * FROM Services";
 
-            try (PreparedStatement query = conn.prepareStatement(displaySql)) {
-                ResultSet rs = query.executeQuery();
-                displayServices(conn, rs);
-                rs.close();
+                try (PreparedStatement query = conn.prepareStatement(displaySql)) {
+                    ResultSet rs = query.executeQuery();
+                    displayServices(conn, rs);
+                    rs.close();
 
-                break;
+                    break;
+                }
+
             }
-
-        }
         }
 
     }
@@ -88,14 +89,14 @@ public class DisplayDB {
 
     //Querries to print data from each respective table
     private static void displayClients(Connection conn, ResultSet rs) throws SQLException {
-        String createProcedure = "Create Procedure displayClients()\n" +
+    /*    String createProcedure = "Create Procedure displayClients()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Clients;\n" +
                 "  END;";
 
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(createProcedure);
-
+    */
         CallableStatement cs = conn.prepareCall("{call displayClients}");
         rs = cs.executeQuery();
         System.out.println("\n");
@@ -131,14 +132,14 @@ public class DisplayDB {
 
     }
     private static void displayEmployees(Connection conn, ResultSet rs) throws SQLException{
-        String createProcedure = "Create Procedure displayEmployees()\n" +
+      /*  String createProcedure = "Create Procedure displayEmployees()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Employees;\n" +
                 "  END;";
 
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(createProcedure);
-
+*/
         CallableStatement cs = conn.prepareCall("{call displayEmployees}");
         rs = cs.executeQuery();
         System.out.println("\n");
@@ -170,76 +171,76 @@ public class DisplayDB {
     }
 
     private static void displayAppointments(Connection conn, ResultSet rs) throws SQLException{
-        String createProcedure = "Create Procedure displayAppointments()\n" +
+    /*    String createProcedure = "Create Procedure displayAppointments()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Appointments;\n" +
                 "  END;";
 
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(createProcedure);
-
+    */
         CallableStatement cs = conn.prepareCall("{call displayAppointments}");
         rs = cs.executeQuery();
         System.out.println("\n");
-            while (rs.next()) {
-                Integer A_ID = rs.getInt("AppointmentID");
-                String AppointmentMonth = rs.getString("AppointmentMonth");
-                String AppointmentDay = rs.getString("AppointmentDay");
-                String ServiceID = rs.getString("ServiceID");
-                Integer C_ID = rs.getInt("CustomerID");
+        while (rs.next()) {
+            Integer A_ID = rs.getInt("AppointmentID");
+            String AppointmentMonth = rs.getString("AppointmentMonth");
+            String AppointmentDay = rs.getString("AppointmentDay");
+            String ServiceID = rs.getString("ServiceID");
+            Integer C_ID = rs.getInt("CustomerID");
 
-                System.out.print(
-                        " Appointment ID " + A_ID + "\t\t" +
-                                " Client's Next Appointment Date: " + AppointmentMonth + "/" + AppointmentDay + "\t\t" +
-                                " Service: " + ServiceID + "\t\t" +
-                                " CustomerID:  " + C_ID + "\n"
+            System.out.print(
+                    " Appointment ID " + A_ID + "\t\t" +
+                            " Client's Next Appointment Date: " + AppointmentMonth + "/" + AppointmentDay + "\t\t" +
+                            " Service: " + ServiceID + "\t\t" +
+                            " CustomerID:  " + C_ID + "\n"
 
-                );
+            );
 
-            }
-            rs.close();
-            //query.executeUpdate();
         }
+        rs.close();
+        //query.executeUpdate();
+    }
 
 
 
     private static void displayAddresses(Connection conn, ResultSet rs) throws SQLException{
-        String createProcedure = "Create Procedure displayAddresses()\n" +
+    /*   String createProcedure = "Create Procedure displayAddresses()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Addresses;\n" +
                 "  END;";
 
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(createProcedure);
-
+    */
         CallableStatement cs = conn.prepareCall("{call displayAddresses}");
         rs = cs.executeQuery();
         System.out.println("\n");
-            while (rs.next()) {
-                String E_streetAdd = rs.getString("Street");
-                String E_city = rs.getString("City");
-                Integer E_zip = rs.getInt("Zipcode");
+        while (rs.next()) {
+            String E_streetAdd = rs.getString("Street");
+            String E_city = rs.getString("City");
+            Integer E_zip = rs.getInt("Zipcode");
 
 
-                System.out.print(
-                        " Street Address: " + E_streetAdd + "\t\t" +
-                                " City:  " + E_city + "\t\t" +
-                                " Zipcode: " + E_zip + "\n"
-                );
+            System.out.print(
+                    " Street Address: " + E_streetAdd + "\t\t" +
+                            " City:  " + E_city + "\t\t" +
+                            " Zipcode: " + E_zip + "\n"
+            );
 
-            }
-            rs.close();
-            //query.executeUpdate();
         }
+        rs.close();
+        //query.executeUpdate();
+    }
     private static void displayServices(Connection conn, ResultSet rs) throws SQLException{
-        String createProcedure = "Create Procedure displayServices()\n" +
+       /* String createProcedure = "Create Procedure displayServices()\n" +
                 " BEGIN\n" +
                 "   SELECT * From Services;\n" +
                 "  END;";
 
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(createProcedure);
-
+*/
         CallableStatement cs = conn.prepareCall("{call displayServices}");
         rs = cs.executeQuery();
         System.out.println("\n");
