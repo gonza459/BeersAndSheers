@@ -35,7 +35,7 @@ public class PopulateDB {
         return attributes;
     }
     //Inserts Data to the Database Tables
-    public void InsertToDatabase(Connection conn) throws Exception{
+    public void InsertCSVtoDatabase(Connection conn) throws Exception{
 
         String addressInsert = "Insert into Addresses(Street, City, Zipcode)" +
                 "VALUES (?, ?, ?)";
@@ -122,6 +122,56 @@ public class PopulateDB {
 
         }
     }
+    public void InsertIntoDatabase(Connection conn) throws Exception {
+        Scanner dataTable = new Scanner(System.in);
+        System.out.println("Enter the number of the information you would like to search for: " + "\n" +
+                "1.Clients" + "\n" +
+                "2.Employees" + "\n" +
+                "3.Appointments" + "\n" +
+                "4.Addresses List" + "\n" +
+                "5.Services Being Offered" + "\n" +
+                "6.Sales per Month" + "\n" +
+                "7.Go back to Main Menu\n");
+
+        int response = dataTable.nextInt();
+
+        System.out.println("\n");
+
+        switch (response) {
+            case 1: {
+
+                InsertClient(conn);
+
+                break;
+
+            }case 2: {
+
+                InsertEmployee(conn);
+
+                break;
+
+            }case 3: {
+
+
+                InsertAppointment(conn);
+
+                break;
+
+            }case 4: {
+                InsertService(conn);
+
+                break;
+
+
+            }case 5: {
+                UserInteraction UI = new UserInteraction();
+                UI.Instructions(conn);
+                break;
+
+            }
+        }
+
+    }
 
     public void InsertClient(Connection conn)throws SQLException{
         /*String createProcedure = "CREATE PROCEDURE insertClient(IN FirstName varchar(20), IN LastName varchar(20), " +
@@ -172,6 +222,116 @@ public class PopulateDB {
         cs.executeUpdate();
         //rs = cs.executeQuery();
         System.out.println("Client Added!\n");
+
+    }
+    public void InsertAppointment(Connection conn)throws SQLException{
+      /*  String createProcedure = "CREATE PROCEDURE insertAppointment(IN AppointmentID int(11), IN ServiceID int(11), " +
+                "IN AppointmentMonth int(2), IN AppointmentDay int(2), IN CustomerID int(11)) "+
+                "BEGIN\n"+
+                "INSERT Into Appointments (AppointmentID, ServiceID, AppointmentMonth, AppointmentDay, CustomerID)\n" +
+                "Values (AppointmentID, ServiceID, AppointmentMonth, AppointmentDay, CustomerID);\n" +
+                "END;\n";
+
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate(createProcedure);
+*/
+        Scanner s = new Scanner(System.in);
+        System.out.println("Enter the following information for the new Appointment: " + "\n");
+        System.out.println( "AppointmentID: " + "\n");
+        int A_ID = s.nextInt();
+
+        System.out.println( "Service ID: " + "\n");
+        int S_ID = s.nextInt();
+
+        System.out.println( "Appointment Month: " + "\n");
+        int month = s.nextInt();
+
+        System.out.println( "Appointment Day: " + "\n");
+        int day = s.nextInt();
+
+        System.out.println( "CustomerID: " + "\n");
+        int C_ID = s.nextInt();
+
+        CallableStatement cs = conn.prepareCall("{call InsertAppointment(?, ?, ?, ?, ?)}");
+
+        cs.setInt(1, A_ID);
+        cs.setInt(2, S_ID);
+        cs.setInt(3, month);
+        cs.setInt(4, day);
+        cs.setInt(5, C_ID);
+
+        cs.executeUpdate();
+        //rs = cs.executeQuery();
+        System.out.println("Apppointment Added!\n");
+
+    }
+    public void InsertEmployee(Connection conn)throws SQLException{
+
+        Scanner s = new Scanner(System.in);
+        System.out.println("Enter the following information for the new employee: " + "\n");
+        System.out.println( "First Name: " + "\n");
+        String fName = s.nextLine();
+
+        System.out.println( "Last Name: " + "\n");
+        String lName = s.nextLine();
+
+        System.out.println( "Phone Number: " + "\n");
+        String phoneNum = s.nextLine();
+
+        System.out.println( "Street: " + "\n");
+        String street = s.nextLine();
+
+        System.out.println( "City: " + "\n");
+        String city = s.nextLine();
+
+        System.out.println( "Zip: " + "\n");
+        Integer zip = s.nextInt();
+        System.out.println("\n");
+
+
+        CallableStatement cs = conn.prepareCall("{call InsertEmployee(?, ?, ?, ?, ?, ?)}");
+
+        cs.setString(1, fName);
+        cs.setString(2, lName);
+        cs.setString(3, street);
+        cs.setString(4, city);
+        cs.setInt(5, zip);
+        cs.setString(6, phoneNum);
+
+        cs.executeUpdate();
+        //rs = cs.executeQuery();
+        System.out.println("Employee Added!\n");
+
+    }
+    public void InsertService(Connection conn)throws SQLException{
+        Scanner s = new Scanner(System.in);
+        System.out.println("Enter the following information for the new Appointment: " + "\n");
+        System.out.println( "AppointmentID: " + "\n");
+        int A_ID = s.nextInt();
+
+        System.out.println( "Service ID: " + "\n");
+        int S_ID = s.nextInt();
+
+        System.out.println( "Appointment Month: " + "\n");
+        int month = s.nextInt();
+
+        System.out.println( "Appointment Day: " + "\n");
+        int day = s.nextInt();
+
+        System.out.println( "CustomerID: " + "\n");
+        int C_ID = s.nextInt();
+
+        CallableStatement cs = conn.prepareCall("{call InsertService(?, ?, ?, ?, ?)}");
+
+        cs.setInt(1, A_ID);
+        cs.setInt(2, S_ID);
+        cs.setInt(3, month);
+        cs.setInt(4, day);
+        cs.setInt(5, C_ID);
+
+        cs.executeUpdate();
+        //rs = cs.executeQuery();
+        System.out.println("Apppointment Added!\n");
 
     }
 }

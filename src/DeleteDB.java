@@ -5,6 +5,60 @@ import java.util.Scanner;
 //File for deleting records and tables from the DB
 public class DeleteDB {
 
+    public void DeleteRecord(Connection conn) throws Exception {
+        Scanner dataTable = new Scanner(System.in);
+        System.out.println("Enter the number of the table you would\n" +
+                "\n" +
+                "like to delete a record from: " + "\n" +
+                "1.Clients" + "\n" +
+                "2.Employees" + "\n" +
+                "3.Appointments" + "\n" +
+                "4.Services Being Offered" + "\n" +
+                "5.Go back\n");
+
+        int response = dataTable.nextInt();
+        System.out.println("\n");
+
+        switch (response) {
+            case 1: {
+
+                deleteClient(conn);
+
+                break;
+
+            }
+            case 2: {
+
+                deleteEmployee(conn);
+
+                break;
+
+            }
+            case 3: {
+
+
+                deleteAppointment(conn);
+
+                break;
+
+            }
+            case 4: {
+                deleteService(conn);
+
+                break;
+
+
+            }
+            case 5: {
+                UserInteraction UI = new UserInteraction();
+                UI.Instructions(conn);
+                break;
+
+            }
+        }
+
+    }
+
     //This method deletes per record according to the EmployeeID as prompted from the user
     static void deleteEmployee(Connection conn) throws SQLException{
         Scanner dataTable = new Scanner(System.in);
@@ -45,6 +99,20 @@ public class DeleteDB {
             query.executeUpdate();
 
             System.out.println("The appointment was successfully deleted.");
+        }
+        //query.executeUpdate();
+    }
+    static void deleteService(Connection conn) throws SQLException{
+        Scanner dataTable = new Scanner(System.in);
+        System.out.println("Enter the ServiceID you would like to delete from: ");
+
+        int response = dataTable.nextInt();
+        try (PreparedStatement query = conn.prepareStatement("Delete From Services where ServiceID = ?" )) {
+            System.out.println("Entries Deleted. \n");
+            query.setInt(1, response);
+            query.executeUpdate();
+
+            System.out.println("The service was successfully deleted.");
         }
         //query.executeUpdate();
     }

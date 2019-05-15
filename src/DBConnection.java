@@ -16,7 +16,7 @@ public class DBConnection {
 
             Class.forName(driverLoc);
             mysqlConnection = DriverManager.getConnection(connectionUrl, uName, pass);
-            System.out.println("Successful Connection!\n");
+            System.out.println("Welcome to your Beers & Sheers database!\n");
 
             if(mysqlConnection.isClosed())
                 mysqlConnection = DBConnection.getMySqlConnection();

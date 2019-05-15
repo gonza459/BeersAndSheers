@@ -26,25 +26,81 @@ public class Sales {
     }
 
 
-    static void InsertSales(Connection conn) throws SQLException {
-     /*   String insertSales = "Insert into MonthlySales(TotalAppointments) Values(?)";
+    static void UpdateSales(Connection conn) throws SQLException {
+        int[] totals = new int[28];
+        String insertSales = "Update MonthlySales Set TotalAppointments = ? where Month = ?";
 
-        CallableStatement cs = conn.prepareCall("{call TotalAppointments}");
-        ResultSet rs = cs.executeQuery();
+        String totalAppts = "Select AppointmentMonth, count(distinct AppointmentID) from finalDB.Appointments group by AppointmentMonth";
+
+        PreparedStatement ps = conn.prepareStatement(totalAppts);
+        ResultSet rs = ps.executeQuery();
         System.out.println("\n");
 
+        int i = 0;
+        assert rs != null;
         while(rs.next()){
-            Integer total = rs.getInt("totals");
-            try (PreparedStatement query = conn.prepareStatement(insertSales)){
-                query.setInt(1,total);
-                query.executeUpdate();
-                query.clearParameters();
-                System.out.println("Inserted!");
+            totals[i] = rs.getInt(2);
+
+            PreparedStatement query = conn.prepareStatement(insertSales);
+            query.setInt(1,totals[i]);
+            query.setInt(2, i+1);
+            query.executeUpdate();
+            i++;
+
             }
+        rs.close();
+            int[] total_C = new int[28];
+            String insertClients = "Update MonthlySales Set TotalClients = ? where Month = ?";
+
+            String totalClients = "\n" +
+                    "Select AppointmentMonth, count(distinct CustomerID) as TotalClients\n" +
+                    "From finalDB.Appointments\n" +
+                    "GROUP BY AppointmentMonth;";
+
+            ps = conn.prepareStatement(totalClients);
+            ResultSet clients_rs = ps.executeQuery();
+            System.out.println("\n");
+
+            i = 0;
+            assert clients_rs != null;
+            while(clients_rs.next()){
+                total_C[i] = clients_rs.getInt(2);
+
+                PreparedStatement query = conn.prepareStatement(insertClients);
+                query.setInt(1,total_C[i]);
+                query.setInt(2, i+1);
+                query.executeUpdate();
+                i++;
+
+            }
+            rs.close();
+            int[] total_R = new int[28];
+            String insertRevenue = "Update MonthlySales Set TotalRevenue= ? where Month = ?";
+
+            String totalRevenue = "\n" +
+                    "Select AppointmentMonth, sum(S.ServicePrice) as TotalRevenue\n"+
+                    "From Services S RIGHT JOIN finalDB.Appointments A on S.ServiceID = A.ServiceID\n" +
+                    "GROUP BY AppointmentMonth;";
+
+            ps = conn.prepareStatement(totalRevenue);
+            ResultSet rev_rs = ps.executeQuery();
+            System.out.println("\n");
+
+            i = 0;
+            assert rev_rs != null;
+            while(rev_rs.next()){
+                total_R[i] = rev_rs.getInt(2);
+
+                PreparedStatement query = conn.prepareStatement(insertRevenue);
+                query.setInt(1,total_R[i]);
+                query.setInt(2, i+1);
+                query.executeUpdate();
+                i++;
+
+            }
+        rs.close();
         }
 
-    }
-    */
+
     }
 
-}
