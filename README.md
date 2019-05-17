@@ -21,7 +21,7 @@ src files included:
 
 -UserInteraction.java, runs each file according to desired action wished to be performed and displays all instructions to prompt the users input
 
-Generating Data: 
+Running the program: 
 -Make sure libraries "com.massisframework:j-text-utils:0.3.4" is downloaded through Maven
     -This will properly format all the tables
 -Run Main.java
