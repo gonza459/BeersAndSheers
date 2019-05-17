@@ -15,22 +15,12 @@ public class Main {
         DBConnection database = new DBConnection();
         conn = database.getMySqlConnection();
 
-        List<List<String>> salonArray;
-
-        PopulateDB pop = new PopulateDB();
-        DeleteDB no = new DeleteDB();
-        Sales s = new Sales();
-        DisplayDB dis = new DisplayDB();
-        UpdateDB u = new UpdateDB();
-        SearchDB sD = new SearchDB();
-
         UserInteraction UI = new UserInteraction();
 
         boolean go = true;
 
-        while(go) {
-            UI.Instructions(conn);
-        }
+        UI.Instructions(conn);
+
 
     }
 

@@ -29,7 +29,7 @@ public class UserInteraction{
 
     }
 
-    public void Instructions(Connection conn) throws SQLException {
+    public void Instructions(Connection conn) throws Exception {
         //conn = database.getMySqlConnection();
         Scanner action = new Scanner(System.in);
 
@@ -40,7 +40,6 @@ public class UserInteraction{
                     "1.Search" + "\n" +
                     "2.Insert a new record" + "\n" +
                     "3.Edit an existing record" + "\n" +
-                    "4.Insert a csv of records to import into the tables" + "\n" +
                     "4.Export a csv of your current data" + "\n" +
                     "5.Delete a record" + "\n" +
                     "6.Display a table" + "\n" +
@@ -55,7 +54,7 @@ public class UserInteraction{
                         try {
                             sD.SearchDatabase(conn);
                         } catch (Exception SQLException) {
-                            System.out.println("Error!");
+                            System.out.println("Error!\n");
                         }
 
                         break;
@@ -65,8 +64,9 @@ public class UserInteraction{
                         try {
                             pop.InsertIntoDatabase(conn);
                         } catch (Exception SQLException) {
-                            System.out.println("Error!");
+                            System.out.println("Error!\n");
                         }
+
 
                         break;
 
@@ -77,44 +77,39 @@ public class UserInteraction{
                             u.UpdateDatabase(conn);
 
                         } catch (Exception SQLException) {
-                            System.out.println("Error!");
+                            System.out.println("Error!\n");
                         }
 
                         break;
 
                     }
                     case 4: {
-                        try {
-                            pop.InsertCSVtoDatabase(conn);
-                        } catch (Exception SQLException) {
-                            System.out.println("Error!");
-                        }
 
-
+                        dis.printDB(conn);
                         break;
 
                     }
                     case 5: {
 
                         try {
-                            dis.DisplayDatabase(conn);
+                            d.DeleteRecord(conn);
                         } catch (Exception SQLException) {
-                            System.out.println("Error!");
+                            System.out.println("Error!\n");
                         }
 
                         break;
-
 
                     }
                     case 6: {
 
                         try {
-                            d.DeleteRecord(conn);
+                            dis.DisplayDatabase(conn);
                         } catch (Exception SQLException) {
-                            System.out.println("Error!");
+                            System.out.println("Error!\n");
                         }
 
                         break;
+
 
 
                     }
@@ -123,7 +118,7 @@ public class UserInteraction{
                         cont = false;
                         System.out.println("Goodbye! :)");
                         temp = false;
-                        //conn.closeWriter();
+                        System.exit(0);
                         break;
 
                     }

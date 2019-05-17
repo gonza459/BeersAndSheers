@@ -8,8 +8,8 @@ public class DeleteDB {
     public void DeleteRecord(Connection conn) throws Exception {
         Scanner dataTable = new Scanner(System.in);
         System.out.println("Enter the number of the table you would\n" +
-                "\n" +
                 "like to delete a record from: " + "\n" +
+                "\n" +
                 "1.Clients" + "\n" +
                 "2.Employees" + "\n" +
                 "3.Appointments" + "\n" +
@@ -70,10 +70,12 @@ public class DeleteDB {
             query.setInt(1, response);
             query.executeUpdate();
 
-            System.out.println("The employee was successfully deleted.");
+            System.out.println("The employee was successfully deleted.\n");
         }
         //query.executeUpdate();
     }
+
+    //This method deletes per record according to the CustomerID as prompted from the user
     static void deleteClient(Connection conn) throws SQLException{
         Scanner dataTable = new Scanner(System.in);
         System.out.println("Enter the CustomerID you would like to delete from: ");
@@ -84,10 +86,12 @@ public class DeleteDB {
             query.setInt(1, response);
             query.executeUpdate();
 
-            System.out.println("The client was successfully deleted.");
+            System.out.println("The client was successfully deleted.\n");
         }
         //query.executeUpdate();
     }
+
+    //This method deletes per record according to the AppointmentID as prompted from the user
     static void deleteAppointment(Connection conn) throws SQLException{
         Scanner dataTable = new Scanner(System.in);
         System.out.println("Enter the AppointmentID you would like to delete from: ");
@@ -98,10 +102,12 @@ public class DeleteDB {
             query.setInt(1, response);
             query.executeUpdate();
 
-            System.out.println("The appointment was successfully deleted.");
+            System.out.println("The appointment was successfully deleted.\n");
         }
         //query.executeUpdate();
     }
+
+    //This method deletes per record according to the ServiceID as prompted from the user
     static void deleteService(Connection conn) throws SQLException{
         Scanner dataTable = new Scanner(System.in);
         System.out.println("Enter the ServiceID you would like to delete from: ");
@@ -112,7 +118,7 @@ public class DeleteDB {
             query.setInt(1, response);
             query.executeUpdate();
 
-            System.out.println("The service was successfully deleted.");
+            System.out.println("The service was successfully deleted.\n");
         }
         //query.executeUpdate();
     }
@@ -176,7 +182,7 @@ public class DeleteDB {
                 try (Statement query = conn.createStatement()) {
                     query.executeUpdate("Truncate table Finances");
 
-                    System.out.println("All records have successfully been deleted.");
+                    System.out.println("All records have successfully been deleted.\n");
 
                     break;
                 }
@@ -190,7 +196,7 @@ public class DeleteDB {
                     query.executeUpdate("Truncate table Addresses");
                     query.executeUpdate("Truncate table Appointments");
 
-                    System.out.println("All records have successfully been deleted.");
+                    System.out.println("All records have successfully been deleted.\n");
 
                     break;
                 }

@@ -13,7 +13,6 @@ import java.text.*;
 public class SearchDB {
     List<List<String>> attributes = new ArrayList<List<String>>();
     Connection conn;
-    Services service = new Services();
 
     SearchDB() {
 
@@ -93,7 +92,7 @@ public class SearchDB {
 
 
 
-    //Querries to print data from each respective table
+    //Querries to search for entries from each respective table according to each possible search term
     private static void searchClients(Connection conn) throws SQLException {
         Scanner input = new Scanner(System.in);
         int count;
@@ -379,7 +378,8 @@ public class SearchDB {
                 "3. Appointment Month\n" +
                 "4. Appointment Month and Day\n" +
                 "5. Appointment Day\n" +
-                "6. CustomerID");
+                "6. CustomerID\n" +
+                "7. EmployeeID\n");
         int response = input.nextInt();
 
         switch (response) {
@@ -422,7 +422,6 @@ public class SearchDB {
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
                 String searchSql = "SELECT * FROM Appointments Where ServiceID = ?";
 
@@ -440,21 +439,24 @@ public class SearchDB {
             case 3: {
                 System.out.println("Enter the Appointment Month you would like to look up: ");
                 input.nextLine();
-                String month = input.nextLine();
+                int month = input.nextInt();
 
+
+                //Gets number of rows needed to print out
                 String countSql = "SELECT count(*) From Appointments where AppointmentMonth = ?";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
-                countPS.setString(1, month);
+                countPS.setInt(1, month);
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
+
+                //Runs SQL prepared statement to receive information
                 String searchSql = "SELECT * FROM Appointments Where AppointmentMonth = ?";
 
                 PreparedStatement query = conn.prepareStatement(searchSql);
-                countPS.setString(1, month);
+                query.setInt(1, month);
                 rs = query.executeQuery();
 
                 DisplayDB d = new DisplayDB();
@@ -468,26 +470,25 @@ public class SearchDB {
 
                 System.out.println("Enter the Appointment Month you would like to look up: ");
                 input.nextLine();
-                String month = input.nextLine();
+                int month = input.nextInt();
                 System.out.println("Enter the Appointment Day you would like to look up: ");
                 input.nextLine();
-                String day = input.nextLine();
+                int day = input.nextInt();
 
-                String countSql = "SELECT count(*) From Appointments where AppointmentMonth = ? AND AppointmentDay = ?";
+                String countSql = "SELECT count(*) From Appointments where( AppointmentMonth = ?) AND (AppointmentDay = ?)";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
-                countPS.setString(1,month);
-                countPS.setString(2,day);
+                countPS.setInt(1,month);
+                countPS.setInt(2,day);
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
-                String searchSql = "SELECT * FROM Appointments Where AppointmentMonth = ? AND AppointmentDay = ?";
+                String searchSql = "SELECT * FROM Appointments Where (AppointmentMonth = ?) AND (AppointmentDay = ?)";
 
                 PreparedStatement query = conn.prepareStatement(searchSql);
-                countPS.setString(1,month);
-                countPS.setString(2,day);
+                query.setInt(1,month);
+                query.setInt(2,day);
                 rs = query.executeQuery();
 
                 DisplayDB d = new DisplayDB();
@@ -500,21 +501,20 @@ public class SearchDB {
             case 5: {
                 System.out.println("Enter the Appointment Day you would like to look up: ");
                 input.nextLine();
-                String day = input.nextLine();
+                int day = input.nextInt();
 
                 String countSql = "SELECT count(*) From Appointments where AppointmentDay = ?";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
-                countPS.setString(1,day);
+                countPS.setInt(1,day);
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
                 String searchSql = "SELECT * FROM Appointments Where AppointmentDay = ?";
 
                 PreparedStatement query = conn.prepareStatement(searchSql);
-                countPS.setString(1,day);
+                query.setInt(1,day);
                 rs = query.executeQuery();
 
                 DisplayDB d = new DisplayDB();
@@ -529,16 +529,15 @@ public class SearchDB {
                 input.nextLine();
                 int C_id = input.nextInt();
 
-                String countSql = "SELECT count(*) From Appointments where CustomerIDID = ?";
+                String countSql = "SELECT count(*) From Appointments where CustomerID = ?";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
                 countPS.setInt(1,C_id);
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
-                String searchSql = "SELECT * FROM Appointments Where AppointmentID = ?";
+                String searchSql = "SELECT * FROM Appointments Where CustomerID = ?";
 
                 PreparedStatement query = conn.prepareStatement(searchSql);
                 query.setInt(1,C_id);
@@ -550,6 +549,30 @@ public class SearchDB {
 
                 break;
 
+            } case 7: {
+                System.out.println("Enter the Employee ID you would like to look up: ");
+                input.nextLine();
+                int E_id = input.nextInt();
+
+                String countSql = "SELECT count(*) From Appointments where EmployeeID = ?";
+
+                PreparedStatement countPS = conn.prepareStatement(countSql);
+                countPS.setInt(1, E_id);
+                ResultSet countRS = countPS.executeQuery();
+                countRS.next();
+                count = countRS.getInt(1);
+
+                String searchSql = "SELECT * FROM Appointments Where EmployeeID = ?";
+
+                PreparedStatement query = conn.prepareStatement(searchSql);
+                query.setInt(1, E_id);
+                rs = query.executeQuery();
+
+                DisplayDB d = new DisplayDB();
+                d.displayAppointments(conn, rs, count);
+                rs.close();
+
+                break;
             }
 
 
@@ -625,7 +648,7 @@ public class SearchDB {
 
             }
             case 3: {
-                System.out.println("Enter the City you would like to look up: ");
+                System.out.println("Enter the street address you would like to look up: ");
                 input.nextLine();
                 String street = input.nextLine();
 
@@ -681,7 +704,6 @@ public class SearchDB {
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
                 String searchSql = "SELECT * FROM Services Where ServiceID = ?";
 
@@ -708,7 +730,6 @@ public class SearchDB {
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
                 String searchSql = "SELECT * FROM Services Where ServiceName = ?";
 
@@ -728,19 +749,18 @@ public class SearchDB {
                 input.nextLine();
                 String duration = input.nextLine();
 
-                String countSql = "SELECT count(*) From Services where ServiceDuration = ?";
+                String countSql = "SELECT count(*) From Services where ServiceDuration Like ?";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
-                countPS.setString(1,duration);
+                countPS.setString(1,duration + "%");
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
-                String searchSql = "SELECT * FROM Services Where ServiceDuration = ?";
+                String searchSql = "SELECT * FROM Services Where ServiceDuration Like ? ";
 
                 PreparedStatement query = conn.prepareStatement(searchSql);
-                query.setString(1,duration);
+                query.setString(1,duration + "%");
                 rs = query.executeQuery();
 
                 DisplayDB d = new DisplayDB();
@@ -751,7 +771,7 @@ public class SearchDB {
 
             }
             case 4: {
-                System.out.println("Enter the Service ID you would like to look up: ");
+                System.out.println("Enter the price of the service you would like to look up: ");
                 input.nextLine();
                 float price = input.nextInt();
 
@@ -762,7 +782,6 @@ public class SearchDB {
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
                 String searchSql = "SELECT * FROM Services Where ServicePrice = ?";
 
@@ -782,19 +801,18 @@ public class SearchDB {
                 input.nextLine();
                 String materials = input.nextLine();
 
-                String countSql = "SELECT count(*) From Services where ServiceMaterials = ?";
+                String countSql = "SELECT count(*) From Services where ServiceMaterials  Like ?";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
-                countPS.setString(1,materials);
+                countPS.setString(1,"%" + materials + "%");
                 ResultSet countRS = countPS.executeQuery();
                 countRS.next();
                 count = countRS.getInt(1);
-                System.out.println(count);
 
-                String searchSql = "SELECT * FROM Services Where ServiceMaterials = ?";
+                String searchSql = "SELECT * FROM Services Where ServiceMaterials  Like ?";
 
                 PreparedStatement query = conn.prepareStatement(searchSql);
-                query.setString(1,materials);
+                query.setString(1,"%" + materials + "%");
                 rs = query.executeQuery();
 
                 DisplayDB d = new DisplayDB();
@@ -808,45 +826,37 @@ public class SearchDB {
 
     }
 
+    /*
+    This table is only searchable by month due to the values in each column always being updated
+    as new/existing entries are being made/ updated
+    For this reason, the only substantial information that the user can search by is the month
+    as it will never change and therefore be concrete comparable information
+    */
     private static void searchSales(Connection conn) throws SQLException {
         Scanner input = new Scanner(System.in);
         int count;
         ResultSet rs;
 
-        System.out.println("What would you like to search by?\n" +
-                "1. Month\n");
-        int response = input.nextInt();
+        System.out.println("Enter the Appointment Month you would like to look up: ");
+        int month = input.nextInt();
 
-        switch (response) {
-            case 1: {
-                System.out.println("Enter the Appointment Month you would like to look up: ");
-                input.nextLine();
-                String month = input.nextLine();
+        String countSql = "SELECT count(*) From MonthlySales where Month = ?";
 
-                String countSql = "SELECT count(*) From MonthlySales where Month = ?";
+        PreparedStatement countPS = conn.prepareStatement(countSql);
+        countPS.setInt(1, month);
+        ResultSet countRS = countPS.executeQuery();
+        countRS.next();
+        count = countRS.getInt(1);
 
-                PreparedStatement countPS = conn.prepareStatement(countSql);
-                countPS.setString(1, month);
-                ResultSet countRS = countPS.executeQuery();
-                countRS.next();
-                count = countRS.getInt(1);
-                System.out.println(count);
+        String searchSql = "SELECT * FROM MonthlySales Where Month = ?";
 
-                String searchSql = "SELECT * FROM MonthlySales Where Month = ?";
+        PreparedStatement query = conn.prepareStatement(searchSql);
+        query.setInt(1, month);
+        rs = query.executeQuery();
 
-                PreparedStatement query = conn.prepareStatement(searchSql);
-                countPS.setString(1, month);
-                rs = query.executeQuery();
-
-                DisplayDB d = new DisplayDB();
-                d.displaySales(conn, rs, count);
-                rs.close();
-
-                break;
-
-            }
-
-        }
+        DisplayDB d = new DisplayDB();
+        d.displaySales(conn, rs, count);
+        rs.close();
 
     }
 }

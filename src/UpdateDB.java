@@ -13,13 +13,12 @@ public class UpdateDB {
     }
     public void UpdateDatabase(Connection conn) throws Exception {
         Scanner dataTable = new Scanner(System.in);
-        System.out.println("Enter the number of the information you would\n" +
-                "like to update a record: " + "\n" +
+        System.out.println("Enter the number for the data you would like to update a record: " + "\n" +
                 "1.Clients" + "\n" +
                 "2.Employees" + "\n" +
                 "3.Appointments" + "\n" +
-                "5.Services Being Offered" + "\n" +
-                "6.Sales per Month" + "\n");
+                "4.Services Being Offered" + "\n" +
+                "5.Go back tp Main Menu\n");
 
         int response = dataTable.nextInt();
 
@@ -50,9 +49,9 @@ public class UpdateDB {
 
 
             }case 5:{
-                Sales s = new Sales();
-                s.UpdateSales(conn);
-
+                UserInteraction UI = new UserInteraction();
+                UI.Instructions(conn);
+                break;
             }
         }
 
@@ -61,8 +60,9 @@ public class UpdateDB {
 
     public void UpdateEmployee(Connection conn) throws SQLException{
         Scanner s = new Scanner(System.in);
-        System.out.println("Enter the EmployeeID you would like to update: ");
+        System.out.println("Enter the EmployeeID for the Employee you would like to update: ");
         int E_ID = s.nextInt();
+        System.out.println("\n");
 
         System.out.println("What would you like to update?");
         System.out.println("1. First Name\n" +
@@ -85,7 +85,7 @@ public class UpdateDB {
                     query.setInt(2,E_ID);
                     query.executeUpdate();
 
-                    System.out.println("The employee was successfully updated.");
+                    System.out.println("The employee was successfully updated.\n");
 
                     break;
 
@@ -101,7 +101,7 @@ public class UpdateDB {
                 query.setInt(2,E_ID);
                 query.executeUpdate();
 
-                System.out.println("The employee was successfully updated.");
+                System.out.println("The employee was successfully updated.\n");
 
                 break;
 
@@ -117,7 +117,7 @@ public class UpdateDB {
                 query.setInt(2,E_ID);
                 query.executeUpdate();
 
-                System.out.println("The employee was successfully updated.");
+                System.out.println("The employee was successfully updated.\n");
 
                 break;
 
@@ -133,7 +133,7 @@ public class UpdateDB {
                 query.setInt(2,E_ID);
                 query.executeUpdate();
 
-                System.out.println("The employee was successfully updated.");
+                System.out.println("The employee was successfully updated.\n");
 
                 break;
 
@@ -141,7 +141,6 @@ public class UpdateDB {
             }
             case 5: {
                 System.out.println("Enter the new Zipcode: ");
-                s.nextInt();
                 Integer zip = s.nextInt();
 
                 PreparedStatement query = conn.prepareStatement("UPDATE Employees SET Zipcode = ? where EmployeeID = ?" );
@@ -149,7 +148,7 @@ public class UpdateDB {
                 query.setInt(2,E_ID);
                 query.executeUpdate();
 
-                System.out.println("The employee was successfully updated.");
+                System.out.println("The employee was successfully updated.\n");
 
                 break;
 
@@ -166,7 +165,7 @@ public class UpdateDB {
                 query.setInt(2,E_ID);
                 query.executeUpdate();
 
-                System.out.println("The employee was successfully updated.");
+                System.out.println("The employee was successfully updated.\n");
 
                 break;
 
@@ -176,8 +175,9 @@ public class UpdateDB {
     }
     public void UpdateClient(Connection conn) throws SQLException{
         Scanner s = new Scanner(System.in);
-        System.out.println("Enter the ClientID you would like to update: ");
+        System.out.println("Enter the ClientID for the client you would like to update:");
         int C_ID = s.nextInt();
+        System.out.println("\n");
 
         System.out.println("What would you like to update?");
         System.out.println("1. First Name\n" +
@@ -201,7 +201,7 @@ public class UpdateDB {
                 query.setInt(2,C_ID);
                 query.executeUpdate();
 
-                System.out.println("The Client was successfully updated.");
+                System.out.println("The Client was successfully updated.\n");
 
                 break;
 
@@ -217,7 +217,7 @@ public class UpdateDB {
                 query.setInt(2,C_ID);
                 query.executeUpdate();
 
-                System.out.println("The client was successfully updated.");
+                System.out.println("The client was successfully updated.\n");
 
                 break;
 
@@ -233,7 +233,7 @@ public class UpdateDB {
                 query.setInt(2,C_ID);
                 query.executeUpdate();
 
-                System.out.println("The client was successfully updated.");
+                System.out.println("The client was successfully updated.\n");
 
                 break;
 
@@ -249,7 +249,7 @@ public class UpdateDB {
                 query.setInt(2,C_ID);
                 query.executeUpdate();
 
-                System.out.println("The client was successfully updated.");
+                System.out.println("The client was successfully updated.\n");
 
                 break;
 
@@ -257,7 +257,6 @@ public class UpdateDB {
             }
             case 5: {
                 System.out.println("Enter the new Zipcode: ");
-                s.nextInt();
                 Integer zip = s.nextInt();
 
                 PreparedStatement query = conn.prepareStatement("UPDATE Clients SET Zipcode = ? where CustomerID = ?" );
@@ -265,7 +264,7 @@ public class UpdateDB {
                 query.setInt(2,C_ID);
                 query.executeUpdate();
 
-                System.out.println("The client was successfully updated.");
+                System.out.println("The client was successfully updated.\n");
 
                 break;
 
@@ -282,7 +281,7 @@ public class UpdateDB {
                 query.setInt(2,C_ID);
                 query.executeUpdate();
 
-                System.out.println("The client was successfully updated.");
+                System.out.println("The client was successfully updated.\n");
 
                 break;
 
@@ -297,7 +296,7 @@ public class UpdateDB {
                 query.setInt(2,C_ID);
                 query.executeUpdate();
 
-                System.out.println("The client was successfully updated.");
+                System.out.println("The client was successfully updated.\n");
 
                 break;
 
@@ -305,17 +304,19 @@ public class UpdateDB {
         }
 
     }
-    public void UpdateAppointment(Connection conn) throws SQLException{
+    public void UpdateAppointment(Connection conn) throws Exception{
         Scanner s = new Scanner(System.in);
-        System.out.println("Enter the AppointmentID you would like to update: ");
+        System.out.println("Enter the Appointment ID for the appointment you would like to update: ");
         int A_ID = s.nextInt();
+        System.out.println("\n");
 
         System.out.println("What would you like to update?\n");
         System.out.println("1. ServiceID\n" +
                 "2. Appointment Month and Day\n" +
                 "3. Just Appointment Day\n" +
                 "4. Customer ID\n" +
-                "5. Go back to main menu\n");
+                "5. Employee ID\n" +
+                "6. Go back to main menu\n");
 
         int response = s.nextInt();
 
@@ -353,7 +354,7 @@ public class UpdateDB {
                 query.setInt(3,A_ID);
                 query.executeUpdate();
 
-                System.out.println("The Appointment was successfully updated.");
+                System.out.println("The Appointment was successfully updated.\n");
 
                 break;
 
@@ -369,7 +370,7 @@ public class UpdateDB {
                 query.setInt(2,A_ID);
                 query.executeUpdate();
 
-                System.out.println("The Appointment was successfully updated.");
+                System.out.println("The Appointment was successfully updated.\n");
 
                 break;
 
@@ -385,12 +386,27 @@ public class UpdateDB {
                 query.setInt(2,A_ID);
                 query.executeUpdate();
 
-                System.out.println("The Appointment was successfully updated.");
+                System.out.println("The Appointment was successfully updated.\n");
 
                 break;
 
 
             }case 5: {
+                System.out.println("Enter the Employee ID: ");
+                s.nextLine();
+                int E_ID = s.nextInt();
+
+                PreparedStatement query = conn.prepareStatement("UPDATE Appointments SET EmployeeID = ? where AppointmentID = ?" );
+                query.setInt(1, E_ID);
+                query.setInt(2,A_ID);
+                query.executeUpdate();
+
+                System.out.println("The Appointment was successfully updated.\n");
+
+                break;
+
+
+            }case 6: {
                 UserInteraction UI = new UserInteraction();
                 UI.Instructions(conn);
                 break;
@@ -400,10 +416,11 @@ public class UpdateDB {
         }
 
     }
-    public void UpdateService(Connection conn) throws SQLException {
+    public void UpdateService(Connection conn) throws Exception {
         Scanner s = new Scanner(System.in);
-        System.out.println("Enter the ServiceID you would like to update: ");
+        System.out.println("Enter the ServiceID for the service you would like to update: ");
         int S_ID = s.nextInt();
+        System.out.println("\n");
 
         System.out.println("What would you like to update?");
         System.out.println("1. Service Name\n" +
@@ -424,7 +441,7 @@ public class UpdateDB {
                 query.setInt(2, S_ID);
                 query.executeUpdate();
 
-                System.out.println("The Service was successfully updated.");
+                System.out.println("The Service was successfully updated.\n");
 
                 break;
 
@@ -440,7 +457,7 @@ public class UpdateDB {
                 query.setInt(2, S_ID);
                 query.executeUpdate();
 
-                System.out.println("The Service Duration was successfully updated.");
+                System.out.println("The Service Duration was successfully updated.\n");
 
                 break;
 
@@ -456,7 +473,7 @@ public class UpdateDB {
                 query.setInt(2, S_ID);
                 query.executeUpdate();
 
-                System.out.println("The Service price was successfully updated.");
+                System.out.println("The Service price was successfully updated.\n");
 
                 break;
 
@@ -472,7 +489,7 @@ public class UpdateDB {
                 query.setInt(2, S_ID);
                 query.executeUpdate();
 
-                System.out.println("The Service materials was successfully updated.");
+                System.out.println("The Service materials was successfully updated.\n");
 
                 break;
 

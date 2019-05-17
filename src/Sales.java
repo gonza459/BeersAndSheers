@@ -30,6 +30,8 @@ public class Sales {
         int[] totals = new int[28];
         String insertSales = "Update MonthlySales Set TotalAppointments = ? where Month = ?";
 
+        //Retrieves the total Number of appointments as grouped by month to then insert into the MonthlySales Table
+
         String totalAppts = "Select AppointmentMonth, count(distinct AppointmentID) from finalDB.Appointments group by AppointmentMonth";
 
         PreparedStatement ps = conn.prepareStatement(totalAppts);
@@ -49,6 +51,13 @@ public class Sales {
 
             }
         rs.close();
+
+        /*
+        -Retrieves total number of distinct clients per month
+        -Distinct client information is important for this column in case a particular client may
+        have more than one appointment within a given month, the data will demonstrate the
+        accurate number of clients compared to the number of appointments per month
+        */
             int[] total_C = new int[28];
             String insertClients = "Update MonthlySales Set TotalClients = ? where Month = ?";
 
@@ -74,6 +83,13 @@ public class Sales {
 
             }
             rs.close();
+
+            /*
+            -Retrieves all service price according to each service ID as found in each appointment
+            -The SQL code then calculated the sum of the sale made from each appointment according to the
+            service done.
+            -The sums are then organized per month as the appointments are organized
+            */
             int[] total_R = new int[28];
             String insertRevenue = "Update MonthlySales Set TotalRevenue= ? where Month = ?";
 

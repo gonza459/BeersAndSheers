@@ -11,7 +11,6 @@ import java.text.*;
 public class DisplayDB {
     List<List<String>> attributes = new ArrayList<List<String>>();
     Connection conn;
-    Services service = new Services();
 
     DisplayDB(){
 
@@ -40,6 +39,10 @@ public class DisplayDB {
                 ResultSet rs = cs.executeQuery();
                 System.out.println("\n");
 
+
+            //This sql command counts the number of current records to send to the display method
+                //so it knows how many entries to display
+
                 String countSql = "SELECT count(*) From Clients";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
@@ -59,6 +62,8 @@ public class DisplayDB {
                 ResultSet rs = cs.executeQuery();
                 System.out.println("\n");
 
+                //This sql command counts the number of current records to send to the display method
+                //so it knows how many entries to display
                 String countSql = "SELECT count(*) From Employees";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
@@ -78,7 +83,8 @@ public class DisplayDB {
                 ResultSet rs = cs.executeQuery();
                 System.out.println("\n");
 
-
+                //This sql command counts the number of current records to send to the display method
+                //so it knows how many entries to display
                 String countSql = "SELECT count(*) From Appointments";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
@@ -98,8 +104,10 @@ public class DisplayDB {
                 ResultSet rs = cs.executeQuery();
                 System.out.println("\n");
 
-                String countSql = "SELECT count(*) From Addresses";
 
+                //This sql command counts the number of current records to send to the display method
+                //so it knows how many entries to display
+                String countSql = "SELECT count(*) From Addresses";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
                 ResultSet countRS = countPS.executeQuery();
@@ -118,8 +126,10 @@ public class DisplayDB {
                 ResultSet rs = cs.executeQuery();
                 System.out.println("\n");
 
-                String countSql = "SELECT count(*) From Services";
 
+                //This sql command counts the number of current records to send to the display method
+                //so it knows how many entries to display
+                String countSql = "SELECT count(*) From Services";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
                 ResultSet countRS = countPS.executeQuery();
@@ -134,12 +144,18 @@ public class DisplayDB {
 
             }
             case 6: {
+                System.out.println("Updating most current data...");
+                Sales s = new Sales();
+                s.UpdateSales(conn);
+
                 CallableStatement cs = conn.prepareCall("{call displaySales}");
                 ResultSet rs = cs.executeQuery();
                 System.out.println("\n");
 
-                String countSql = "SELECT count(*) From MonthlySales";
 
+                //This sql command counts the number of current records to send to the display method
+                //so it knows how many entries to display
+                String countSql = "SELECT count(*) From MonthlySales";
 
                 PreparedStatement countPS = conn.prepareStatement(countSql);
                 ResultSet countRS = countPS.executeQuery();
@@ -243,8 +259,8 @@ public class DisplayDB {
         stmt.executeUpdate(createProcedure);
     */
 
-        String[] data = {"Appointment ID", "Service ID", "Appointment Month", "Appointment Day", "Customer ID"};
-        String[][] Appointments = new String[count][5];
+        String[] data = {"Appointment ID", "Service ID", "Appointment Month", "Appointment Day", "Customer ID", "Employee ID"};
+        String[][] Appointments = new String[count][6];
         int i = 0;
         assert rs != null;
         while (rs.next())
@@ -254,6 +270,7 @@ public class DisplayDB {
             Appointments[i][2] = Integer.toString(rs.getInt("AppointmentMonth"));
             Appointments[i][3] = Integer.toString(rs.getInt("AppointmentDay"));
             Appointments[i][4] = Integer.toString(rs.getInt("CustomerID"));
+            Appointments[i][5] = Integer.toString(rs.getInt("EmployeeID"));
             i++;
         }
         TextTable AppointmentTable = new TextTable(data, Appointments);
@@ -350,123 +367,140 @@ public class DisplayDB {
         //query.executeUpdate();
     }
 
-    public static void printDB(Connection conn) throws SQLException, IOException {
-            String data = ("Customer ID, " + " First Name, " + "Last Name, " + "Street Address, " + "City, "
-                    + "Zipcode," + "Phone Number," + "Email\n");
 
-            String Date_Time = "dd-MM-yyy_HH:mm:ss";
+    //Querries to print data to a csv file
+    public static void printDB(Connection conn) throws Exception {
 
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(Date_Time);
-            LocalDateTime currentDate = LocalDateTime.now();
-            String formatDateTime = currentDate.format(dtf);
+        //Prints Clients CSV
+        String data = ("Client's ID, " + " First Name, " + "Last Name, " + "Street Address, " + "City, "
+                + "Zipcode," + "Phone Number," + "Email\n");
+
+        //Retrieves real time data to print in csv title
+        String Date_Time = "dd-MM-yyy_HH:mm:ss";
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(Date_Time);
+        LocalDateTime currentDate = LocalDateTime.now();
+        String formatDateTime = currentDate.format(dtf);
+
+        FileWriter fileWriter = new FileWriter("Clients_" + formatDateTime + ".csv", false);
+        PrintWriter writer = new PrintWriter(fileWriter);
+
+        writer.print(data);
+
+        PreparedStatement getPS = conn.prepareStatement("SELECT * FROM Clients");
+        ResultSet getRS = getPS.executeQuery();
+
+        while (getRS.next())
+        {
+            writer.print(getRS.getInt(1) + ", "
+                    + getRS.getString(2) + ", "
+                    + getRS.getString(3) + ", "
+                    + getRS.getString(4) + ", "
+                    + getRS.getString(5) + ", "
+                    + getRS.getInt(6) + ", "
+                    + getRS.getString(7) + ", "
+                    + getRS.getString(8) + "\n");
+        }
+        writer.close();
+
+        //Employees CSV
+
+        data = ("Employee ID, " + " First Name, " + "Last Name, " + "Street Address, " + "City, "
+                + "Zipcode," + "Phone Number\n");
+
+        fileWriter = new FileWriter("Employees_" + formatDateTime + ".csv", false);
+        writer = new PrintWriter(fileWriter);
+
+        writer.print(data);
+
+        getPS = conn.prepareStatement("SELECT * FROM Employees");
+        getRS = getPS.executeQuery();
+
+        while (getRS.next())
+        {
+            writer.print(getRS.getInt(1) + ", "
+                    + getRS.getString(2) + ", "
+                    + getRS.getString(3) + ", "
+                    + getRS.getString(4) + ", "
+                    + getRS.getString(5) + ", "
+                    + getRS.getInt(6) + ", "
+                    + getRS.getString(7) + "\n");
+        }
+        writer.close();
+
+        //Appointments csv
+
+        data = ("Appointment ID, " + "Service being done according to service ID, " + "AppointmentMonth, " + "AppointmentDay, " + "Customer ID," + "Employee ID of assigned stylist\n");
+
+        fileWriter = new FileWriter("Appointments_" + formatDateTime + ".csv", false);
+        writer = new PrintWriter(fileWriter);
+
+        writer.print(data);
+
+        getPS = conn.prepareStatement("SELECT * FROM Appointments");
+        getRS = getPS.executeQuery();
 
 
+        while (getRS.next())
+        {
+            writer.print(getRS.getInt(1) + ", "
+                    + getRS.getInt(2) + ", "
+                    + getRS.getInt(3) + ", "
+                    + getRS.getInt(4) + ", "
+                    + getRS.getInt(5) + ", "
+                    + getRS.getInt(6) + "\n");
+        }
+
+        writer.close();
+
+        //Services CSV
+
+        data = ("Service ID, " + "Service Name, " + "Estimated Service Duration, " + "Estimated service Price, " + "Materials needed for service,\n");
+
+        fileWriter = new FileWriter("Services_" + formatDateTime + ".csv", false);
+        writer = new PrintWriter(fileWriter);
+
+        writer.print(data);
+
+        getPS = conn.prepareStatement("SELECT * FROM Services");
+        getRS = getPS.executeQuery();
+
+        while (getRS.next())
+        {
+            writer.print(getRS.getInt(1) + ", "
+                    + getRS.getString(2) + ", "
+                    + getRS.getString(3) + ", "
+                    + getRS.getFloat(4) + ", "
+                    + getRS.getString(5) + "\n");
+        }
+        writer.close();
+
+        //Monthly Sales Report CSV
+
+        data = ("Month, " + "Total Appointments, " + "Total Revenue, " + "Total Clients, " + "\n");
+
+        fileWriter = new FileWriter("MonthlySales_" + formatDateTime + ".csv", false);
+        writer = new PrintWriter(fileWriter);
+
+        writer.print(data);
+
+        getPS = conn.prepareStatement("SELECT * FROM MonthlySales");
+        getRS = getPS.executeQuery();
+
+        while (getRS.next())
+        {
+            writer.print(getRS.getInt(1) + ", "
+                    + getRS.getInt(2) + ", "
+                    + getRS.getInt(3) + ", "
+                    + getRS.getInt(4) + "\n");
+        }
+        writer.close();
 
 
-            FileWriter fileWriter = new FileWriter("clients_" + formatDateTime + ".csv", false);
-            PrintWriter writer = new PrintWriter(fileWriter);
+        System.out.println("Exported all tables to CSVs\n");
+        UserInteraction UI = new UserInteraction();
+        UI.Instructions(conn);
 
-            writer.print(data);
-
-            PreparedStatement getPS = conn.prepareStatement("SELECT * FROM Clients");
-            ResultSet getRS = getPS.executeQuery();
-
-            while (getRS.next())
-            {
-                writer.print(getRS.getInt(1) + ", "
-                        + getRS.getString(2) + ", "
-                        + getRS.getString(3) + ", "
-                        + getRS.getString(4) + ", "
-                        + getRS.getString(5) + ", "
-                        + getRS.getInt(6) + ", "
-                        + getRS.getString(7) + ", "
-                        + getRS.getString(8) + "\n");
-            }
-            writer.close();
-
-            data = ("Employee ID, " + " First Name, " + "Last Name, " + "Street Address, " + "City, "
-                    + "Zipcode," + "Phone Number\n");
-
-            fileWriter = new FileWriter("Employees_" + formatDateTime + ".csv", false);
-            writer = new PrintWriter(fileWriter);
-
-            writer.print(data);
-
-            getPS = conn.prepareStatement("SELECT * FROM Employees");
-            getRS = getPS.executeQuery();
-
-            while (getRS.next())
-            {
-                writer.print(getRS.getInt(1) + ", "
-                        + getRS.getString(2) + ", "
-                        + getRS.getString(3) + ", "
-                        + getRS.getString(4) + ", "
-                        + getRS.getString(5) + ", "
-                        + getRS.getInt(6) + ", "
-                        + getRS.getString(7) + "\n");
-            }
-            writer.close();
-
-            data = ("Appointment ID, " + "ServiceID, " + "AppointmentMonth, " + "AppointmentDay, " + "CustomerID,\n");
-
-            fileWriter = new FileWriter("Appointments_" + formatDateTime + ".csv", false);
-            writer = new PrintWriter(fileWriter);
-
-            writer.print(data);
-
-            getPS = conn.prepareStatement("SELECT * FROM Appointments");
-            getRS = getPS.executeQuery();
-
-            while (getRS.next())
-            {
-                writer.print(getRS.getInt(1) + ", "
-                        + getRS.getInt(2) + ", "
-                        + getRS.getInt(3) + ", "
-                        + getRS.getInt(4) + ", "
-                        + getRS.getInt(5) + "\n");
-            }
-            writer.close();
-
-            data = ("Service ID, " + "ServiceName, " + "ServiceDuration, " + "ServicePrice, " + "ServiceMaterials,\n");
-
-            fileWriter = new FileWriter("Services_" + formatDateTime + ".csv", false);
-            writer = new PrintWriter(fileWriter);
-
-            writer.print(data);
-
-            getPS = conn.prepareStatement("SELECT * FROM Services");
-            getRS = getPS.executeQuery();
-
-            while (getRS.next())
-            {
-                writer.print(getRS.getInt(1) + ", "
-                        + getRS.getString(2) + ", "
-                        + getRS.getString(3) + ", "
-                        + getRS.getFloat(4) + ", "
-                        + getRS.getString(5) + "\n");
-            }
-            writer.close();
-
-            data = ("Month, " + "Total Appointments, " + "Total Revenue, " + "Total Clients, " + "\n");
-
-            fileWriter = new FileWriter("monthlySales_" + formatDateTime + ".csv", false);
-            writer = new PrintWriter(fileWriter);
-
-            writer.print(data);
-
-            getPS = conn.prepareStatement("SELECT * FROM MonthlySales");
-            getRS = getPS.executeQuery();
-
-            while (getRS.next())
-            {
-                writer.print(getRS.getInt(1) + ", "
-                        + getRS.getInt(2) + ", "
-                        + getRS.getInt(3) + ", "
-                        + getRS.getInt(4) + "\n");
-            }
-            writer.close();
-
-            System.out.println("Exported all tables to CSVs");
         }
     }
 
