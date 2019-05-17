@@ -42,8 +42,8 @@ public class UserInteraction{
                     "3.Edit an existing record" + "\n" +
                     "4.Insert a csv of records to import into the tables" + "\n" +
                     "4.Export a csv of your current data" + "\n" +
-                    "5.Display a table" + "\n" +
-                    "6.Delete a record" + "\n" +
+                    "5.Delete a record" + "\n" +
+                    "6.Diplay a table" + "\n" +
                     "7.Exit" + "\n");
 
             int response = action.nextInt();
