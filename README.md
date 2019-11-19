@@ -1,4 +1,4 @@
-# FinalProject_CPSC408
+# Beers and Sheers
 
 Rene German CPSC 408-01 Final Project 5/17/19
 
